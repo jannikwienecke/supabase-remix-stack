@@ -5,6 +5,9 @@ processes = [ ]
 
 [env]
 PORT = "8080"
+SUPABASE_URL = https://cajvgzmybrwvmgtaydlx.supabase.co
+SUPABASE_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNhanZnem15YnJ3dm1ndGF5ZGx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NDg5MDE2OTQsImV4cCI6MTk2NDQ3NzY5NH0.hEHNbodtcHyljZ3qnjXlz-PoFXJ8dE1Qz8n87qniG2o
+
 
 [deploy]
 release_command = "npx prisma migrate deploy"
