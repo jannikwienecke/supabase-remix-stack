@@ -37,7 +37,7 @@ function getClient() {
   const isReadReplicaRegion = !PRIMARY_REGION || PRIMARY_REGION === FLY_REGION;
 
   if (!isLocalHost) {
-    databaseUrl.host = `${FLY_REGION}.${databaseUrl.host}`;
+    // databaseUrl.host = `${FLY_REGION}.${databaseUrl.host}`;
     if (!isReadReplicaRegion) {
       // 5433 is the read-replica port
       databaseUrl.port = "5433";
