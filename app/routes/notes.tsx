@@ -27,8 +27,6 @@ export default function NotesPage() {
     supabase
       .from(`Note`)
       .on("*", (payload) => {
-        // something changed
-        // call the loader
         console.log("__payload: ", payload);
       })
       .subscribe();

@@ -1,38 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
 model User {
-  id    String @id @default(cuid())
-  email String @unique
-
+  id        String   @id @default(cuid())
+  email     String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  password Password?
-  notes    Note[]
 }
 
 model Password {
-  hash String
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String @unique
+  hash   String
+  userId String   @unique @db.Uuid
+  user   profiles @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Note {
-  id    String @id @default(cuid())
-  title String
-  body  String
-
+  id        String   @id @default(cuid())
+  title     String
+  body      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  userId    String   @db.Uuid
+  user      profiles @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+model profiles {
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  email      String    @unique
+  id         String    @id @default(cuid()) @db.Uuid
+  notes      Note[]
+  password   Password?
 }

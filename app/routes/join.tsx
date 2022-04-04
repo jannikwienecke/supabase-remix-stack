@@ -11,6 +11,7 @@ import { getUserId, createUserSession } from "~/session.server";
 
 import { createUser, getUserByEmail } from "~/models/user.server";
 import { validateEmail } from "~/utils";
+import supabase from "~/supabase";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
@@ -60,14 +61,22 @@ export const action: ActionFunction = async ({ request }) => {
     );
   }
 
-  const user = await createUser(email, password);
-
-  return createUserSession({
-    request,
-    userId: user.id,
-    remember: false,
-    redirectTo: typeof redirectTo === "string" ? redirectTo : "/",
+  const { error, user, session } = await supabase.auth.signUp({
+    email,
+    password,
   });
+
+  console.log({ error, user, session });
+
+  return redirect("/join");
+  // const user = await createUser(email, password);
+
+  // return createUserSession({
+  //   request,
+  //   userId: user.id,
+  //   remember: false,
+  //   redirectTo: typeof redirectTo === "string" ? redirectTo : "/",
+  // });
 };
 
 export const meta: MetaFunction = () => {

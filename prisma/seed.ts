@@ -5,16 +5,18 @@ const prisma = new PrismaClient();
 
 async function seed() {
   const email = "rachel@remix.run";
+  const id = "474bf0cc-06cc-4989-971f-a19c3a6147a1";
 
   // cleanup the existing database
-  await prisma.user.delete({ where: { email } }).catch(() => {
+  await prisma.profiles.delete({ where: { id } }).catch(() => {
     // no worries if it doesn't exist yet
   });
 
   const hashedPassword = await bcrypt.hash("racheliscool", 10);
 
-  const user = await prisma.user.create({
+  const user = await prisma.profiles.create({
     data: {
+      id,
       email,
       password: {
         create: {

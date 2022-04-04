@@ -13,6 +13,7 @@ import { validateEmail } from "~/utils";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const userId = await getUserId(request);
+
   if (userId) return redirect("/");
   return json({});
 };
@@ -53,6 +54,8 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const user = await verifyLogin(email, password);
+
+  console.log("__user: ", user);
 
   if (!user) {
     return json<ActionData>(

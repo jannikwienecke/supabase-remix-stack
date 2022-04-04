@@ -1,7 +1,7 @@
+import { profiles } from "@prisma/client";
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
-import type { User } from "~/models/user.server";
 import { getUserById } from "~/models/user.server";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
@@ -31,12 +31,15 @@ export async function getUserId(request: Request): Promise<string | undefined> {
   return userId;
 }
 
-export async function getUser(request: Request): Promise<null | User> {
+export async function getUser(request: Request): Promise<null | profiles> {
   const userId = await getUserId(request);
+
   if (userId === undefined) return null;
 
   const user = await getUserById(userId);
   if (user) return user;
+
+  console.log("CALL LOGOUT1");
 
   throw await logout(request);
 }
@@ -46,10 +49,15 @@ export async function requireUserId(
   redirectTo: string = new URL(request.url).pathname
 ): Promise<string> {
   const userId = await getUserId(request);
-  if (!userId) {
-    const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
-    throw redirect(`/login?${searchParams}`);
-  }
+  console.log("__userId: ", userId);
+
+  // if (!userId) {
+  //   const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
+  //   throw new Error("ERROR!");
+
+  //   // throw redirect(`/login?${searchParams}`);
+  // }
+  // @ts-ignore
   return userId;
 }
 
@@ -58,6 +66,8 @@ export async function requireUser(request: Request) {
 
   const user = await getUserById(userId);
   if (user) return user;
+
+  console.log("CALL LOGOUT2");
 
   throw await logout(request);
 }
@@ -87,6 +97,8 @@ export async function createUserSession({
 }
 
 export async function logout(request: Request) {
+  console.log("LOGOUT");
+
   const session = await getSession(request);
   return redirect("/", {
     headers: {
